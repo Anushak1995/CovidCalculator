@@ -258,7 +258,7 @@ def predict():
     #print('i am here')
     
 if __name__ == "__main__":
-    APP.run() 
+    APP.run(debug=True) 
 
 
 # In[ ]:
