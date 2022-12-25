@@ -18,7 +18,7 @@ import re
 
 
 APP = Flask(__name__)
-APP.config['PG_DB'] = 'postgres://daolbbnurgtgwd:de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d@ec2-44-199-22-207.compute-1.amazonaws.com:5432/d9m6c77v184dph'
+#APP.config['PG_DB'] = 'postgres://daolbbnurgtgwd:de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d@ec2-44-199-22-207.compute-1.amazonaws.com:5432/d9m6c77v184dph'
 
 # In[3]:
 
