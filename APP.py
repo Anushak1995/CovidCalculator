@@ -9,7 +9,7 @@ import skfuzzy as fuzz
 import matplotlib.pyplot as plt
 import pandas as pd
 import re
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 #from config import config
 
