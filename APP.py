@@ -66,7 +66,7 @@ def signingup():
 #------------------------db conncetion local--------------
         #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-         conn = psycopg2.connect(
+        conn = psycopg2.connect(
              host="ec2-44-199-22-207.compute-1.amazonaws.com",
              database="d9m6c77v184dph",
              user="daolbbnurgtgwd",
@@ -143,7 +143,7 @@ def login():
 #------------------------db conncetion local--------------
             #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-          conn = psycopg2.connect(
+            conn = psycopg2.connect(
               host="ec2-44-199-22-207.compute-1.amazonaws.com",
               database="d9m6c77v184dph",
               user="daolbbnurgtgwd",
@@ -466,7 +466,7 @@ Where email_address = '{email}'
     try:
         #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-          conn = psycopg2.connect(
+        conn = psycopg2.connect(
               host="ec2-44-199-22-207.compute-1.amazonaws.com",
               database="d9m6c77v184dph",
               user="daolbbnurgtgwd",
@@ -503,7 +503,7 @@ Where email_address = '{email}' AND rnm<=3
     try:
         #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-          conn = psycopg2.connect(
+        conn = psycopg2.connect(
               host="ec2-44-199-22-207.compute-1.amazonaws.com",
               database="d9m6c77v184dph",
               user="daolbbnurgtgwd",
