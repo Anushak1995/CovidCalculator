@@ -64,13 +64,13 @@ def signingup():
         print("here2")
 
 #------------------------db conncetion local--------------
-        conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+        #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-#         conn = psycopg2.connect(
-#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
-#             database="d9m6c77v184dph",
-#             user="daolbbnurgtgwd",
-#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+         conn = psycopg2.connect(
+             host="ec2-44-199-22-207.compute-1.amazonaws.com",
+             database="d9m6c77v184dph",
+             user="daolbbnurgtgwd",
+             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
         cur = conn.cursor()
         print("here3")
         # create table one by one
@@ -141,13 +141,13 @@ def login():
             #print("here login2")
 
 #------------------------db conncetion local--------------
-            conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+            #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-#         conn = psycopg2.connect(
-#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
-#             database="d9m6c77v184dph",
-#             user="daolbbnurgtgwd",
-#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+          conn = psycopg2.connect(
+              host="ec2-44-199-22-207.compute-1.amazonaws.com",
+              database="d9m6c77v184dph",
+              user="daolbbnurgtgwd",
+              password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
             cur = conn.cursor()
             print("here login3")
         # create table one by one
@@ -424,13 +424,13 @@ def predict():
         print("here2")
 
 #------------------------db conncetion local--------------
-        conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+        #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-#         conn = psycopg2.connect(
-#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
-#             database="d9m6c77v184dph",
-#             user="daolbbnurgtgwd",
-#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+        conn = psycopg2.connect(
+              host="ec2-44-199-22-207.compute-1.amazonaws.com",
+              database="d9m6c77v184dph",
+              user="daolbbnurgtgwd",
+              password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
         cur = conn.cursor()
         print("here3")
         # create table one by one
@@ -464,13 +464,13 @@ Where email_address = '{email}'
     '''.format(email=email)
     print(userResultQuerycnt)
     try:
-        conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+        #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-#         conn = psycopg2.connect(
-#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
-#             database="d9m6c77v184dph",
-#             user="daolbbnurgtgwd",
-#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+          conn = psycopg2.connect(
+              host="ec2-44-199-22-207.compute-1.amazonaws.com",
+              database="d9m6c77v184dph",
+              user="daolbbnurgtgwd",
+              password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
         cur = conn.cursor()
         print("here in count login3")
         # create table one by one
@@ -501,13 +501,13 @@ Where email_address = '{email}' AND rnm<=3
     '''.format(email=email)
     print(userResultQuery)
     try:
-        conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+        #conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
 #----------------------db connection host------------------------------------
-#         conn = psycopg2.connect(
-#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
-#             database="d9m6c77v184dph",
-#             user="daolbbnurgtgwd",
-#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+          conn = psycopg2.connect(
+              host="ec2-44-199-22-207.compute-1.amazonaws.com",
+              database="d9m6c77v184dph",
+              user="daolbbnurgtgwd",
+              password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
         cur = conn.cursor()
         print("here login3")
         # create table one by one
