@@ -1,664 +1,537 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 1,
-   "id": "10c28841",
-   "metadata": {
-    "scrolled": true
-   },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      " * Serving Flask app '__main__'\n",
-      " * Debug mode: off\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.\n",
-      " * Running on http://127.0.0.1:5000\n",
-      "Press CTRL+C to quit\n",
-      "127.0.0.1 - - [14/Jan/2023 18:03:49] \"GET / HTTP/1.1\" 200 -\n",
-      "127.0.0.1 - - [14/Jan/2023 18:03:49] \"GET /slide%20navbar%20style.css HTTP/1.1\" 404 -\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "here start\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "127.0.0.1 - - [14/Jan/2023 18:03:50] \"GET /static/styles/style1.css HTTP/1.1\" 304 -\n",
-      "127.0.0.1 - - [14/Jan/2023 18:03:51] \"GET /favicon.ico HTTP/1.1\" 404 -\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "['anushakabir11@gmail.com', '123']\n",
-      "anushakabir11@gmail.com\n",
-      "\n",
-      "SELECT count(*) cnt\n",
-      " FROM USER_RESULT A\n",
-      "Where email_address = 'anushakabir11@gmail.com'\n",
-      "    \n",
-      "here in count login3\n",
-      "15\n",
-      "15\n",
-      "COUNT SHOWN\n",
-      "here login3\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "C:\\Users\\Syediamin\\Anaconda3\\lib\\site-packages\\pandas\\io\\sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy\n",
-      "  warnings.warn(\n",
-      "C:\\Users\\Syediamin\\Anaconda3\\lib\\site-packages\\pandas\\io\\sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy\n",
-      "  warnings.warn(\n",
-      "C:\\Users\\Syediamin\\Anaconda3\\lib\\site-packages\\pandas\\io\\sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy\n",
-      "  warnings.warn(\n",
-      "127.0.0.1 - - [14/Jan/2023 18:04:14] \"POST /login HTTP/1.1\" 200 -\n",
-      "127.0.0.1 - - [14/Jan/2023 18:04:14] \"GET /static/styles/style.css HTTP/1.1\" 304 -\n"
-     ]
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\n",
-      "SELECT TEST_DATE, RESULT_TXT FROM \n",
-      "(SELECT ROW_NUMBER( )OVER (PARTITION BY EMAIL_ADDRESS ORDER BY TEST_DATE DESC) AS RNM\n",
-      " , A.*\n",
-      " FROM USER_RESULT A\n",
-      ") B\n",
-      "Where email_address = 'anushakabir11@gmail.com' AND rnm<=3\n",
-      " order by rnm DESC\n",
-      "    \n",
-      "here login3\n"
-     ]
-    }
-   ],
-   "source": [
-    "\n",
-    "import psycopg2\n",
-    "\n",
-    "import numpy as np\n",
-    "from flask import Flask, request, jsonify, render_template\n",
-    "import pickle\n",
-    "import json\n",
-    "import skfuzzy as fuzz\n",
-    "import matplotlib.pyplot as plt\n",
-    "import pandas as pd\n",
-    "import re\n",
-    "from flask_sqlalchemy import SQLAlchemy\n",
-    "from datetime import date\n",
-    "#from config import config\n",
-    "\n",
-    "l_email=\"\"\n",
-    "APP = Flask(__name__)\n",
-    "\n",
-    "#-----------------------start page---------------------------------\n",
-    "@APP.route('/')\n",
-    "def home():\n",
-    "    print(\"here start\")\n",
-    "    return render_template('index1.html')\n",
-    "\n",
-    "#-----------------------------------------------signup----------------\n",
-    "@APP.route('/signup', methods=['POST'])\n",
-    "    \n",
-    "def signingup():\n",
-    "    print(\"here signup1\")\n",
-    "    '''\n",
-    "    For rendering results on HTML GUI\n",
-    "    '''\n",
-    "    ##taking input given by user in form to int_feature dataframe using request\n",
-    "    #print(request.form.getlist())\n",
-    "    int_features = [x for x in request.form.values()]\n",
-    "    print(int_features)\n",
-    "    \n",
-    "    p_name = int_features[0]\n",
-    "    p_email=int_features[1]\n",
-    "    p_password=int_features[2]\n",
-    "    #print(\"here\"+p_name)\n",
-    "    \n",
-    "\n",
-    "#     \"\"\" create tables in the PostgreSQL database\"\"\"\n",
-    "#     commands = (\n",
-    "#         \"\"\"\n",
-    "#         CREATE TABLE USER_PROFILE (\n",
-    "#             USER_NAME VARCHAR(100) PRIMARY KEY,\n",
-    "#             EMAIL_ADDRESS VARCHAR(255),\n",
-    "#             PASS_WORD VARCHAR(100)\n",
-    "#         )\n",
-    "#         \"\"\"\n",
-    "#                )\n",
-    "    print(\"here1\")\n",
-    "    \n",
-    "    \n",
-    "    command_in = \"\"\" INSERT INTO USER_PROFILE (USER_NAME,EMAIL_ADDRESS,PASS_WORD) VALUES (%s,%s,%s);\"\"\"\n",
-    "    command_select= \"\"\" select email_Address from user_profile;\"\"\"\n",
-    "    #conn = None\n",
-    "    try:\n",
-    "        # read the connection parameters\n",
-    "        #params = config()\n",
-    "        # connect to the PostgreSQL server\n",
-    "        print(\"here2\")\n",
-    "\n",
-    "#------------------------db conncetion local--------------\n",
-    "        conn =  psycopg2.connect(\"dbname=covidcal user=postgres password=AK1234\")\n",
-    "#----------------------db connection host------------------------------------\n",
-    "#         conn = psycopg2.connect(\n",
-    "#             host=\"ec2-44-199-22-207.compute-1.amazonaws.com\",\n",
-    "#             database=\"d9m6c77v184dph\",\n",
-    "#             user=\"daolbbnurgtgwd\",\n",
-    "#             password=\"de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d\")\n",
-    "        cur = conn.cursor()\n",
-    "        print(\"here3\")\n",
-    "        # create table one by one\n",
-    "        #for command in commands[:-1]:\n",
-    "        print(\"here4\")\n",
-    "#-----------------------to get presently stored values-------------------------\n",
-    "        df=pd.read_sql(command_select,conn)\n",
-    "        print (df)\n",
-    "         \n",
-    "   #-------------------------checking if stored value= new input----------------------\n",
-    "        check_email=0\n",
-    "        for i in range(len(df)):\n",
-    "            if df.loc[i, \"email_address\"]==p_email:\n",
-    "                check_email=check_email+1  \n",
-    "                \n",
-    "               \n",
-    " #---------------------------inserting input from form in table --------------------\n",
-    "        \n",
-    "        if check_email==0:\n",
-    "            record_to_insert = (p_name, p_email, p_password)\n",
-    "            cur.execute(command_in,record_to_insert)\n",
-    "            t_message = \"Signup successful, please login with your credentials\"\n",
-    "        else:\n",
-    "            t_message = \"This email address is taken, please login or try using new email\"\n",
-    "            return render_template(\"index1.html\", message = t_message)\n",
-    "        print(\"here5\")\n",
-    "        # close communication with the PostgreSQL database server\n",
-    "        cur.close()\n",
-    "        # commit the changes\n",
-    "        conn.commit()\n",
-    "        return render_template(\"index1.html\", message = t_message)\n",
-    "    except (Exception, psycopg2.DatabaseError) as error:\n",
-    "        print(error)\n",
-    "    finally:\n",
-    "        if conn is not None:\n",
-    "            conn.close()\n",
-    "\n",
-    "#-----------------------------------------------login--------------------------------------\n",
-    "@APP.route('/login', methods=['POST'])\n",
-    "\n",
-    "def login():\n",
-    "        #print(\"here login\")\n",
-    "        '''\n",
-    "        For rendering results on HTML GUI\n",
-    "        '''\n",
-    "    ##taking input given by user in form to int_feature dataframe using request\n",
-    "    #print(request.form.getlist())\n",
-    "        int_features_login = [x for x in request.form.values()]\n",
-    "        print(int_features_login)\n",
-    "\n",
-    "        global l_email\n",
-    "        l_email=int_features_login[0]\n",
-    "        l_password=int_features_login[1]\n",
-    "        print(l_email)\n",
-    "        #print(\"here login1\")\n",
-    "        \n",
-    "        userResultCount=getUserResultCount(l_email)\n",
-    "        ##userResult = getUserResult(l_email)\n",
-    "        print(userResultCount)\n",
-    "        print(\"COUNT SHOWN\")\n",
-    "    \n",
-    "     \n",
-    "        login_select= \"\"\" select email_Address,pass_word from user_profile;\"\"\"\n",
-    "        try:\n",
-    "        # read the connection parameters\n",
-    "        #params = config()\n",
-    "        # connect to the PostgreSQL server\n",
-    "            #print(\"here login2\")\n",
-    "\n",
-    "#------------------------db conncetion local--------------\n",
-    "            conn =  psycopg2.connect(\"dbname=covidcal user=postgres password=AK1234\")\n",
-    "#----------------------db connection host------------------------------------\n",
-    "#         conn = psycopg2.connect(\n",
-    "#             host=\"ec2-44-199-22-207.compute-1.amazonaws.com\",\n",
-    "#             database=\"d9m6c77v184dph\",\n",
-    "#             user=\"daolbbnurgtgwd\",\n",
-    "#             password=\"de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d\")\n",
-    "            cur = conn.cursor()\n",
-    "            print(\"here login3\")\n",
-    "        # create table one by one\n",
-    "        #for command in commands[:-1]:\n",
-    "        #print(\"here l4\")\n",
-    "#-----------------------to get presently stored values-------------------------\n",
-    "            df=pd.read_sql(login_select,conn)\n",
-    "            #print (df)\n",
-    "            cur.close()\n",
-    "            conn.commit()\n",
-    "   #-------------------------checking if stored value= new input----------------------\n",
-    "            login_email=0\n",
-    "            for i in range(len(df)):\n",
-    "                if df.loc[i, \"email_address\"]==l_email and df.loc[i, \"pass_word\"]==l_password :\n",
-    "                    login_email=login_email+1  \n",
-    "                \n",
-    "            \n",
-    " #---------------------------inserting input from form in table --------------------\n",
-    "            cnt_message=\"No result available\"\n",
-    "            if login_email==1:\n",
-    "                if int(userResultCount)>0:\n",
-    "                    userResult = getUserResult(l_email)\n",
-    "                    return render_template(\"index.html\", userResult=userResult, arrRange=range(len(userResult)))\n",
-    "                else:\n",
-    "                    return render_template(\"index.html\", message_cnt = cnt_message)\n",
-    "                #t1_message = \"login successful\"\n",
-    "                #return render_template(\"index1.html\", message_log = t1_message)\n",
-    "                 \n",
-    "            else:\n",
-    "                t1_message = \"Wrong credential, please try again\"\n",
-    "                return render_template(\"index1.html\", message_1 = t1_message)\n",
-    "            #print(\"here5\")\n",
-    "        # close communication with the PostgreSQL database server\n",
-    "        #cur.close()\n",
-    "        # commit the changes\n",
-    "        #conn.commit()\n",
-    "        #return render_template(\"index1.html\", message = t_message)\n",
-    "        except (Exception, psycopg2.DatabaseError) as error:\n",
-    "            print(error)\n",
-    "        finally:\n",
-    "            if conn is not None:\n",
-    "                conn.close()\n",
-    "\n",
-    "@APP.route('/submit', methods=['POST'])\n",
-    "def predict():\n",
-    "    '''\n",
-    "    For rendering results on HTML GUI\n",
-    "    '''\n",
-    "    ##taking input given by user in form to int_feature dataframe using request\n",
-    "    #print(request.form.getlist())\n",
-    "    int_features = [x for x in request.form.values()]\n",
-    "    print(int_features)\n",
-    "    #outputProbability = 5\n",
-    "\n",
-    "    #data = {\n",
-    "    #    'shouldShowResult': True,\n",
-    "    #    'Probability': outputProbability\n",
-    "    #}\n",
-    "\n",
-    "    # Generate universe variables\n",
-    "    #defining inputs\n",
-    "    x_fever = np.arange(96, 105, 1)\n",
-    "    x_cough = np.arange(0, 6, 1)\n",
-    "    x_rd  = np.arange(0,6,1)\n",
-    "    x_output= np.arange(0, 11, 1)\n",
-    "    print(\"here1\")\n",
-    "    #generate fuzzy mf\n",
-    "    fever_abs= fuzz.trimf(x_fever, [96, 96, 99])\n",
-    "    fever_low = fuzz.trimf(x_fever, [98, 100, 102])\n",
-    "    fever_high=fuzz.trimf(x_fever, [101, 104, 104])\n",
-    "\n",
-    "    cough_abs= fuzz.trapmf(x_cough,[0,0,0,2])\n",
-    "    cough_low = fuzz.trapmf(x_cough, [1, 2,3, 4])\n",
-    "    cough_high=fuzz.trapmf(x_cough, [3, 5, 5,5])\n",
-    "\n",
-    "    rd_abs= fuzz.trapmf(x_rd,[0,0,0,2])\n",
-    "    rd_low = fuzz.trapmf(x_rd, [1, 2,3, 4])\n",
-    "    rd_high=fuzz.trapmf(x_rd, [3, 5, 5,5])\n",
-    "\n",
-    "    output_noneed=fuzz.trimf(x_output, [0, 0,3])\n",
-    "    output_isolation=fuzz.trimf(x_output, [2, 4, 6])\n",
-    "    output_testimm=fuzz.trimf(x_output, [5, 10, 10])\n",
-    "\n",
-    "    print(\"here2\")\n",
-    "    #pip install pyit2fls\n",
-    "    from pyit2fls import zero_mf, singleton_mf, const_mf, tri_mf, ltri_mf, rtri_mf, trapezoid_mf, gaussian_mf\n",
-    "    from numpy import linspace\n",
-    "\n",
-    "\n",
-    "    x_tastelessness = linspace(0, 1, 1001)\n",
-    "    tastelessness_singleton = singleton_mf(x_tastelessness, [1, 1])\n",
-    "\n",
-    "    x_fatigue = linspace(0, 1, 1001)\n",
-    "    fatigue_singleton = singleton_mf(x_fatigue, [1, 1])\n",
-    "\n",
-    "    x_headache = linspace(0, 1, 1001)\n",
-    "    headache_singleton = singleton_mf(x_headache, [1, 1])\n",
-    "\n",
-    "    x_bodypain = linspace(0, 1, 1001)\n",
-    "    bodypain_singleton = singleton_mf(x_bodypain, [1, 1])\n",
-    "\n",
-    "    x_losssmell = linspace(0, 1, 1001)\n",
-    "    losssmell_singleton = singleton_mf(x_losssmell, [1, 1])\n",
-    "\n",
-    "    x_diarrhoea = linspace(0, 1, 1001)\n",
-    "    diarrhoea_singleton = singleton_mf(x_diarrhoea, [1, 1])\n",
-    "    print(\"here3\")\n",
-    "    #P_name = int_features[0]\n",
-    "    #p_email=int_features[1]\n",
-    "    in_fever=int_features[0]\n",
-    "    in_cough=int_features[1]\n",
-    "    in_rd=int_features[2]\n",
-    "    in_tastelessness=int_features[3]\n",
-    "    in_fatigue=int_features[4]\n",
-    "    in_headache=int_features[5]\n",
-    "    in_bodypain=int_features[6]\n",
-    "    in_losssmell=int_features[7]\n",
-    "    in_diarrhoea=int_features[8]\n",
-    "\n",
-    "    print(\"here4\")\n",
-    "    in_fever_abs= fuzz.interp_membership(x_fever, fever_abs, in_fever)\n",
-    "    in_fever_low= fuzz.interp_membership(x_fever, fever_low, in_fever)\n",
-    "    in_fever_high= fuzz.interp_membership(x_fever, fever_high, in_fever)\n",
-    "\n",
-    "    in_cough_abs=fuzz.interp_membership(x_cough, cough_abs, in_cough)\n",
-    "    in_cough_low=fuzz.interp_membership(x_cough, cough_low, in_cough)\n",
-    "    in_cough_high=fuzz.interp_membership(x_cough, cough_high, in_cough)\n",
-    "\n",
-    "    in_rd_abs=fuzz.interp_membership(x_rd, rd_abs, in_rd)\n",
-    "    in_rd_low=fuzz.interp_membership(x_rd, rd_low, in_rd)\n",
-    "    in_rd_high=fuzz.interp_membership(x_rd, rd_high, in_rd)\n",
-    "\n",
-    "    in_tastelessness_val=fuzz.interp_membership(x_tastelessness, tastelessness_singleton, in_tastelessness)\n",
-    "    print(\"here5\")\n",
-    "    in_tastelessness_no=0\n",
-    "    in_tastelessness_yes=1\n",
-    "    if in_tastelessness_val < 0.5:\n",
-    "        in_tastelessness_no = 1\n",
-    "        in_tastelessness_yes=0\n",
-    "    else:\n",
-    "        in_tastelessness_no=0\n",
-    "        in_tastelessness_yes = 1\n",
-    "\n",
-    "    in_fatigue_val=fuzz.interp_membership(x_fatigue, fatigue_singleton, in_fatigue)\n",
-    "\n",
-    "    in_fatigue_no=0\n",
-    "    in_fatigue_yes=1\n",
-    "    if in_fatigue_val < 0.5:\n",
-    "        in_fatigue_no = 1\n",
-    "        in_fatigue_yes=0\n",
-    "    else:\n",
-    "        in_fatigue_no=0\n",
-    "        in_fatigue_yes = 1\n",
-    "\n",
-    "    in_headache_val=fuzz.interp_membership(x_headache, headache_singleton, in_headache)\n",
-    "\n",
-    "    in_headache_no=0\n",
-    "    in_headache_yes=1\n",
-    "    if in_headache_val < 0.5:\n",
-    "        in_headache_no = 1\n",
-    "        in_headache_yes=0\n",
-    "    else:\n",
-    "        in_headache_no=0\n",
-    "        in_headache_yes = 1\n",
-    "\n",
-    "    in_bodypain_val=fuzz.interp_membership(x_bodypain, bodypain_singleton, in_bodypain)\n",
-    "    print(\"here6\")\n",
-    "    in_bodypain_no=0\n",
-    "    in_bodypain_yes=1\n",
-    "    if in_bodypain_val < 0.5:\n",
-    "        in_bodypain_no = 1\n",
-    "        in_bodypain_yes=0\n",
-    "    else:\n",
-    "        in_bodypain_no=0\n",
-    "        in_bodypain_yes = 1\n",
-    "\n",
-    "\n",
-    "    in_losssmell_val=fuzz.interp_membership(x_losssmell, losssmell_singleton, in_losssmell)\n",
-    "\n",
-    "    in_losssmell_no=0\n",
-    "    in_losssmell_yes=1\n",
-    "    if in_losssmell_val < 0.5:\n",
-    "        in_losssmell_no = 1\n",
-    "        in_losssmell_yes=0\n",
-    "    else:\n",
-    "        in_losssmell_no=0\n",
-    "        in_losssmell_yes = 1\n",
-    "\n",
-    "    in_diarrhoea_val=fuzz.interp_membership(x_diarrhoea, diarrhoea_singleton, in_diarrhoea)\n",
-    "\n",
-    "    print(\"here7\")\n",
-    "    in_diarrhoea_no=0\n",
-    "    in_diarrhoea_yes=1\n",
-    "    if in_diarrhoea_val < 0.5:\n",
-    "        in_diarrhoea_no = 1\n",
-    "        in_diarrhoea_yes=0\n",
-    "    else:\n",
-    "        in_diarrhoea_no=0\n",
-    "        in_diarrhoea_yes = 1\n",
-    "\n",
-    "    print(\"here8\")\n",
-    "    #defining rules\n",
-    "    rule_1=np.fmax(in_tastelessness_yes,in_losssmell_yes)\n",
-    "    rule_2=np.fmax(in_rd_low,in_rd_high)\n",
-    "    rule_3=np.fmin(np.fmin(np.fmin(in_fever_abs, np.fmin(in_cough_abs,in_rd_abs)),in_tastelessness_no),in_losssmell_no)\n",
-    "    rule_4=np.fmin(np.fmin(np.fmin(np.fmax(in_fever_low,in_fever_high),in_cough_abs),in_rd_abs),in_headache_no)\n",
-    "    rule_5=np.fmin(np.fmin(np.fmin(in_fever_abs,in_cough_low),in_rd_abs),in_headache_no)\n",
-    "    rule_6=np.fmin(np.fmin(np.fmax(in_fever_low,in_fever_high),np.fmax(in_cough_low,in_cough_high)),np.fmax(in_rd_low,in_rd_high))\n",
-    "    rule_7=np.fmin(np.fmax(in_fever_high,in_fever_low),np.fmax(in_cough_low,in_cough_high))\n",
-    "\n",
-    "    #rulewise output\n",
-    "    rule_1_2=np.fmax(rule_1,rule_2)\n",
-    "    rule_1_2_6=np.fmax(rule_1_2,rule_6)\n",
-    "    rule_1_2_6_7=np.fmax(rule_1_2_6,rule_7)\n",
-    "    active_output_testimm=np.fmin(rule_1_2_6_7,output_testimm)\n",
-    "\n",
-    "\n",
-    "    rule_4_5=np.fmax(rule_4,rule_5)\n",
-    "    active_output_isolation=np.fmin(rule_4_5,output_isolation)\n",
-    "\n",
-    "\n",
-    "    active_output_noneed=np.fmin(rule_3,output_noneed)\n",
-    "\n",
-    "    ##working with output\n",
-    "\n",
-    "    op0 = np.zeros_like(x_output)\n",
-    "\n",
-    "    #aggregating output\n",
-    "\n",
-    "    agg_op=np.fmax(np.fmax(active_output_testimm,active_output_isolation),active_output_noneed)\n",
-    "\n",
-    "    #defuzzification--centroid\n",
-    "    defuzz_centroid=fuzz.defuzz(x_output, agg_op, 'centroid')\n",
-    "\n",
-    "    #defuzzification--bisector\n",
-    "    defuzz_bisector=fuzz.defuzz(x_output, agg_op, 'bisector')\n",
-    "\n",
-    "    #defuzzification--mom\n",
-    "    defuzz_mom = fuzz.defuzz(x_output, agg_op, 'mom')\n",
-    "\n",
-    "    #defuzzification--som\n",
-    "    defuzz_som = fuzz.defuzz(x_output, agg_op, 'som')\n",
-    "\n",
-    "    #defuzzification--lom\n",
-    "    defuzz_lom = fuzz.defuzz(x_output, agg_op, 'lom')\n",
-    "\n",
-    "    print(\"here5\")\n",
-    "    output=round(defuzz_centroid)\n",
-    "    if output<=3:\n",
-    "        x=\"Your possibility to be covid positive is \"\n",
-    "        y=\" in a scale of 10. You do not require a test now\"\n",
-    "        z=x+str(output)+y\n",
-    "        print(x+str(output)+y)\n",
-    "    if  3<output<=5:\n",
-    "        x=\"Your possibility to be covid positive is \"\n",
-    "        y=\" in a scale of 10. Please stay in isolation and remain vigilant\"\n",
-    "        z=x+str(output)+y\n",
-    "        print(x+str(output)+y)\n",
-    "    if  output>5:\n",
-    "        x=\"Your possibility to be covid positive is \"\n",
-    "        y=\" in a scale of 10. Please test immediately and consult specialist\"\n",
-    "        z=x+str(output)+y\n",
-    "        print(x+str(output)+y)\n",
-    "    \n",
-    "    today = date.today()\n",
-    "    result_to_insert = (today,l_email, str(output))    \n",
-    "        \n",
-    "    command_in_result = \"\"\" INSERT INTO USER_RESULT (test_Date,EMAIL_ADDRESS,result_txt) VALUES (%s,%s,%s);\"\"\"\n",
-    "    #conn = None\n",
-    "    try:\n",
-    "        # read the connection parameters\n",
-    "        #params = config()\n",
-    "        # connect to the PostgreSQL server\n",
-    "        print(\"here2\")\n",
-    "\n",
-    "#------------------------db conncetion local--------------\n",
-    "        conn =  psycopg2.connect(\"dbname=covidcal user=postgres password=AK1234\")\n",
-    "#----------------------db connection host------------------------------------\n",
-    "#         conn = psycopg2.connect(\n",
-    "#             host=\"ec2-44-199-22-207.compute-1.amazonaws.com\",\n",
-    "#             database=\"d9m6c77v184dph\",\n",
-    "#             user=\"daolbbnurgtgwd\",\n",
-    "#             password=\"de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d\")\n",
-    "        cur = conn.cursor()\n",
-    "        print(\"here3\")\n",
-    "        # create table one by one\n",
-    "        #for command in commands[:-1]:\n",
-    "        print(\"here4\")\n",
-    "\n",
-    "        cur.execute(command_in_result,result_to_insert)\n",
-    "\n",
-    "        print(\"here5\")\n",
-    "        # close communication with the PostgreSQL database server\n",
-    "        cur.close()\n",
-    "        # commit the changes\n",
-    "        conn.commit()\n",
-    "        #return render_template(\"index.html\")\n",
-    "    except (Exception, psycopg2.DatabaseError) as error:\n",
-    "        print(error)\n",
-    "    finally:\n",
-    "        if conn is not None:\n",
-    "            conn.close()\n",
-    "            \n",
-    "    userResult = getUserResult(l_email)\n",
-    "    return render_template('index.html', prediction_text=z, userResult=userResult, arrRange=range(len(userResult)))\n",
-    "\n",
-    "\n",
-    "\n",
-    "def getUserResultCount(email):\n",
-    "    userResultQuerycnt = '''\n",
-    "SELECT count(*) cnt\n",
-    " FROM USER_RESULT A\n",
-    "Where email_address = '{email}'\n",
-    "    '''.format(email=email)\n",
-    "    print(userResultQuerycnt)\n",
-    "    try:\n",
-    "        conn =  psycopg2.connect(\"dbname=covidcal user=postgres password=AK1234\")\n",
-    "#----------------------db connection host------------------------------------\n",
-    "#         conn = psycopg2.connect(\n",
-    "#             host=\"ec2-44-199-22-207.compute-1.amazonaws.com\",\n",
-    "#             database=\"d9m6c77v184dph\",\n",
-    "#             user=\"daolbbnurgtgwd\",\n",
-    "#             password=\"de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d\")\n",
-    "        cur = conn.cursor()\n",
-    "        print(\"here in count login3\")\n",
-    "        # create table one by one\n",
-    "        #for command in commands[:-1]:\n",
-    "        #print(\"here l4\")\n",
-    "#-----------------------to get presently stored values-------------------------\n",
-    "        df1=pd.read_sql(userResultQuerycnt,conn)\n",
-    "        cnt=df1.loc[0, \"cnt\"]\n",
-    "        print (cnt)\n",
-    "        cur.close()\n",
-    "        #return df1\n",
-    "        return cnt\n",
-    "    except:\n",
-    "        print(\"tried\")\n",
-    "    finally:\n",
-    "        if conn is not None:\n",
-    "            conn.close()\n",
-    "\n",
-    "def getUserResult(email):\n",
-    "    userResultQuery = '''\n",
-    "SELECT TEST_DATE, RESULT_TXT FROM \n",
-    "(SELECT ROW_NUMBER( )OVER (PARTITION BY EMAIL_ADDRESS ORDER BY TEST_DATE DESC) AS RNM\n",
-    " , A.*\n",
-    " FROM USER_RESULT A\n",
-    ") B\n",
-    "Where email_address = '{email}' AND rnm<=3\n",
-    " order by rnm DESC\n",
-    "    '''.format(email=email)\n",
-    "    print(userResultQuery)\n",
-    "    try:\n",
-    "        conn =  psycopg2.connect(\"dbname=covidcal user=postgres password=AK1234\")\n",
-    "#----------------------db connection host------------------------------------\n",
-    "#         conn = psycopg2.connect(\n",
-    "#             host=\"ec2-44-199-22-207.compute-1.amazonaws.com\",\n",
-    "#             database=\"d9m6c77v184dph\",\n",
-    "#             user=\"daolbbnurgtgwd\",\n",
-    "#             password=\"de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d\")\n",
-    "        cur = conn.cursor()\n",
-    "        print(\"here login3\")\n",
-    "        # create table one by one\n",
-    "        #for command in commands[:-1]:\n",
-    "        #print(\"here l4\")\n",
-    "#-----------------------to get presently stored values-------------------------\n",
-    "        df=pd.read_sql(userResultQuery,conn)\n",
-    "        #print (df)\n",
-    "        cur.close()\n",
-    "        return df\n",
-    "    except:\n",
-    "        print(\"tried\")\n",
-    "    finally:\n",
-    "        if conn is not None:\n",
-    "            conn.close()\n",
-    "\n",
-    "\n",
-    "        \n",
-    "    \n",
-    "    \n",
-    "# #if __name__ == '__main__':\n",
-    "#   #  create_tables()\n",
-    "    \n",
-    "    \n",
-    "if __name__ == \"__main__\":\n",
-    "    APP.run() \n",
-    "   "
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "2814a8f0",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.9.12"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+
+import psycopg2
+
+import numpy as np
+from flask import Flask, request, jsonify, render_template
+import pickle
+import json
+import skfuzzy as fuzz
+import matplotlib.pyplot as plt
+import pandas as pd
+import re
+from flask_sqlalchemy import SQLAlchemy
+from datetime import date
+#from config import config
+
+l_email=""
+APP = Flask(__name__)
+
+#-----------------------start page---------------------------------
+@APP.route('/')
+def home():
+    print("here start")
+    return render_template('index1.html')
+
+#-----------------------------------------------signup----------------
+@APP.route('/signup', methods=['POST'])
+    
+def signingup():
+    print("here signup1")
+    '''
+    For rendering results on HTML GUI
+    '''
+    ##taking input given by user in form to int_feature dataframe using request
+    #print(request.form.getlist())
+    int_features = [x for x in request.form.values()]
+    print(int_features)
+    
+    p_name = int_features[0]
+    p_email=int_features[1]
+    p_password=int_features[2]
+    #print("here"+p_name)
+    
+
+#     """ create tables in the PostgreSQL database"""
+#     commands = (
+#         """
+#         CREATE TABLE USER_PROFILE (
+#             USER_NAME VARCHAR(100) PRIMARY KEY,
+#             EMAIL_ADDRESS VARCHAR(255),
+#             PASS_WORD VARCHAR(100)
+#         )
+#         """
+#                )
+    print("here1")
+    
+    
+    command_in = """ INSERT INTO USER_PROFILE (USER_NAME,EMAIL_ADDRESS,PASS_WORD) VALUES (%s,%s,%s);"""
+    command_select= """ select email_Address from user_profile;"""
+    #conn = None
+    try:
+        # read the connection parameters
+        #params = config()
+        # connect to the PostgreSQL server
+        print("here2")
+
+#------------------------db conncetion local--------------
+        conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+#----------------------db connection host------------------------------------
+#         conn = psycopg2.connect(
+#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
+#             database="d9m6c77v184dph",
+#             user="daolbbnurgtgwd",
+#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+        cur = conn.cursor()
+        print("here3")
+        # create table one by one
+        #for command in commands[:-1]:
+        print("here4")
+#-----------------------to get presently stored values-------------------------
+        df=pd.read_sql(command_select,conn)
+        print (df)
+         
+   #-------------------------checking if stored value= new input----------------------
+        check_email=0
+        for i in range(len(df)):
+            if df.loc[i, "email_address"]==p_email:
+                check_email=check_email+1  
+                
+               
+ #---------------------------inserting input from form in table --------------------
+        
+        if check_email==0:
+            record_to_insert = (p_name, p_email, p_password)
+            cur.execute(command_in,record_to_insert)
+            t_message = "Signup successful, please login with your credentials"
+        else:
+            t_message = "This email address is taken, please login or try using new email"
+            return render_template("index1.html", message = t_message)
+        print("here5")
+        # close communication with the PostgreSQL database server
+        cur.close()
+        # commit the changes
+        conn.commit()
+        return render_template("index1.html", message = t_message)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+#-----------------------------------------------login--------------------------------------
+@APP.route('/login', methods=['POST'])
+
+def login():
+        #print("here login")
+        '''
+        For rendering results on HTML GUI
+        '''
+    ##taking input given by user in form to int_feature dataframe using request
+    #print(request.form.getlist())
+        int_features_login = [x for x in request.form.values()]
+        print(int_features_login)
+
+        global l_email
+        l_email=int_features_login[0]
+        l_password=int_features_login[1]
+        print(l_email)
+        #print("here login1")
+        
+        userResultCount=getUserResultCount(l_email)
+        ##userResult = getUserResult(l_email)
+        print(userResultCount)
+        print("COUNT SHOWN")
+    
+     
+        login_select= """ select email_Address,pass_word from user_profile;"""
+        try:
+        # read the connection parameters
+        #params = config()
+        # connect to the PostgreSQL server
+            #print("here login2")
+
+#------------------------db conncetion local--------------
+            conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+#----------------------db connection host------------------------------------
+#         conn = psycopg2.connect(
+#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
+#             database="d9m6c77v184dph",
+#             user="daolbbnurgtgwd",
+#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+            cur = conn.cursor()
+            print("here login3")
+        # create table one by one
+        #for command in commands[:-1]:
+        #print("here l4")
+#-----------------------to get presently stored values-------------------------
+            df=pd.read_sql(login_select,conn)
+            #print (df)
+            cur.close()
+            conn.commit()
+   #-------------------------checking if stored value= new input----------------------
+            login_email=0
+            for i in range(len(df)):
+                if df.loc[i, "email_address"]==l_email and df.loc[i, "pass_word"]==l_password :
+                    login_email=login_email+1  
+                
+            
+ #---------------------------inserting input from form in table --------------------
+            cnt_message="No result available"
+            if login_email==1:
+                if int(userResultCount)>0:
+                    userResult = getUserResult(l_email)
+                    return render_template("index.html", userResult=userResult, arrRange=range(len(userResult)))
+                else:
+                    return render_template("index.html", message_cnt = cnt_message)
+                #t1_message = "login successful"
+                #return render_template("index1.html", message_log = t1_message)
+                 
+            else:
+                t1_message = "Wrong credential, please try again"
+                return render_template("index1.html", message_1 = t1_message)
+            #print("here5")
+        # close communication with the PostgreSQL database server
+        #cur.close()
+        # commit the changes
+        #conn.commit()
+        #return render_template("index1.html", message = t_message)
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
+
+@APP.route('/submit', methods=['POST'])
+def predict():
+    '''
+    For rendering results on HTML GUI
+    '''
+    ##taking input given by user in form to int_feature dataframe using request
+    #print(request.form.getlist())
+    int_features = [x for x in request.form.values()]
+    print(int_features)
+    #outputProbability = 5
+
+    #data = {
+    #    'shouldShowResult': True,
+    #    'Probability': outputProbability
+    #}
+
+    # Generate universe variables
+    #defining inputs
+    x_fever = np.arange(96, 105, 1)
+    x_cough = np.arange(0, 6, 1)
+    x_rd  = np.arange(0,6,1)
+    x_output= np.arange(0, 11, 1)
+    print("here1")
+    #generate fuzzy mf
+    fever_abs= fuzz.trimf(x_fever, [96, 96, 99])
+    fever_low = fuzz.trimf(x_fever, [98, 100, 102])
+    fever_high=fuzz.trimf(x_fever, [101, 104, 104])
+
+    cough_abs= fuzz.trapmf(x_cough,[0,0,0,2])
+    cough_low = fuzz.trapmf(x_cough, [1, 2,3, 4])
+    cough_high=fuzz.trapmf(x_cough, [3, 5, 5,5])
+
+    rd_abs= fuzz.trapmf(x_rd,[0,0,0,2])
+    rd_low = fuzz.trapmf(x_rd, [1, 2,3, 4])
+    rd_high=fuzz.trapmf(x_rd, [3, 5, 5,5])
+
+    output_noneed=fuzz.trimf(x_output, [0, 0,3])
+    output_isolation=fuzz.trimf(x_output, [2, 4, 6])
+    output_testimm=fuzz.trimf(x_output, [5, 10, 10])
+
+    print("here2")
+    #pip install pyit2fls
+    from pyit2fls import zero_mf, singleton_mf, const_mf, tri_mf, ltri_mf, rtri_mf, trapezoid_mf, gaussian_mf
+    from numpy import linspace
+
+
+    x_tastelessness = linspace(0, 1, 1001)
+    tastelessness_singleton = singleton_mf(x_tastelessness, [1, 1])
+
+    x_fatigue = linspace(0, 1, 1001)
+    fatigue_singleton = singleton_mf(x_fatigue, [1, 1])
+
+    x_headache = linspace(0, 1, 1001)
+    headache_singleton = singleton_mf(x_headache, [1, 1])
+
+    x_bodypain = linspace(0, 1, 1001)
+    bodypain_singleton = singleton_mf(x_bodypain, [1, 1])
+
+    x_losssmell = linspace(0, 1, 1001)
+    losssmell_singleton = singleton_mf(x_losssmell, [1, 1])
+
+    x_diarrhoea = linspace(0, 1, 1001)
+    diarrhoea_singleton = singleton_mf(x_diarrhoea, [1, 1])
+    print("here3")
+    #P_name = int_features[0]
+    #p_email=int_features[1]
+    in_fever=int_features[0]
+    in_cough=int_features[1]
+    in_rd=int_features[2]
+    in_tastelessness=int_features[3]
+    in_fatigue=int_features[4]
+    in_headache=int_features[5]
+    in_bodypain=int_features[6]
+    in_losssmell=int_features[7]
+    in_diarrhoea=int_features[8]
+
+    print("here4")
+    in_fever_abs= fuzz.interp_membership(x_fever, fever_abs, in_fever)
+    in_fever_low= fuzz.interp_membership(x_fever, fever_low, in_fever)
+    in_fever_high= fuzz.interp_membership(x_fever, fever_high, in_fever)
+
+    in_cough_abs=fuzz.interp_membership(x_cough, cough_abs, in_cough)
+    in_cough_low=fuzz.interp_membership(x_cough, cough_low, in_cough)
+    in_cough_high=fuzz.interp_membership(x_cough, cough_high, in_cough)
+
+    in_rd_abs=fuzz.interp_membership(x_rd, rd_abs, in_rd)
+    in_rd_low=fuzz.interp_membership(x_rd, rd_low, in_rd)
+    in_rd_high=fuzz.interp_membership(x_rd, rd_high, in_rd)
+
+    in_tastelessness_val=fuzz.interp_membership(x_tastelessness, tastelessness_singleton, in_tastelessness)
+    print("here5")
+    in_tastelessness_no=0
+    in_tastelessness_yes=1
+    if in_tastelessness_val < 0.5:
+        in_tastelessness_no = 1
+        in_tastelessness_yes=0
+    else:
+        in_tastelessness_no=0
+        in_tastelessness_yes = 1
+
+    in_fatigue_val=fuzz.interp_membership(x_fatigue, fatigue_singleton, in_fatigue)
+
+    in_fatigue_no=0
+    in_fatigue_yes=1
+    if in_fatigue_val < 0.5:
+        in_fatigue_no = 1
+        in_fatigue_yes=0
+    else:
+        in_fatigue_no=0
+        in_fatigue_yes = 1
+
+    in_headache_val=fuzz.interp_membership(x_headache, headache_singleton, in_headache)
+
+    in_headache_no=0
+    in_headache_yes=1
+    if in_headache_val < 0.5:
+        in_headache_no = 1
+        in_headache_yes=0
+    else:
+        in_headache_no=0
+        in_headache_yes = 1
+
+    in_bodypain_val=fuzz.interp_membership(x_bodypain, bodypain_singleton, in_bodypain)
+    print("here6")
+    in_bodypain_no=0
+    in_bodypain_yes=1
+    if in_bodypain_val < 0.5:
+        in_bodypain_no = 1
+        in_bodypain_yes=0
+    else:
+        in_bodypain_no=0
+        in_bodypain_yes = 1
+
+
+    in_losssmell_val=fuzz.interp_membership(x_losssmell, losssmell_singleton, in_losssmell)
+
+    in_losssmell_no=0
+    in_losssmell_yes=1
+    if in_losssmell_val < 0.5:
+        in_losssmell_no = 1
+        in_losssmell_yes=0
+    else:
+        in_losssmell_no=0
+        in_losssmell_yes = 1
+
+    in_diarrhoea_val=fuzz.interp_membership(x_diarrhoea, diarrhoea_singleton, in_diarrhoea)
+
+    print("here7")
+    in_diarrhoea_no=0
+    in_diarrhoea_yes=1
+    if in_diarrhoea_val < 0.5:
+        in_diarrhoea_no = 1
+        in_diarrhoea_yes=0
+    else:
+        in_diarrhoea_no=0
+        in_diarrhoea_yes = 1
+
+    print("here8")
+    #defining rules
+    rule_1=np.fmax(in_tastelessness_yes,in_losssmell_yes)
+    rule_2=np.fmax(in_rd_low,in_rd_high)
+    rule_3=np.fmin(np.fmin(np.fmin(in_fever_abs, np.fmin(in_cough_abs,in_rd_abs)),in_tastelessness_no),in_losssmell_no)
+    rule_4=np.fmin(np.fmin(np.fmin(np.fmax(in_fever_low,in_fever_high),in_cough_abs),in_rd_abs),in_headache_no)
+    rule_5=np.fmin(np.fmin(np.fmin(in_fever_abs,in_cough_low),in_rd_abs),in_headache_no)
+    rule_6=np.fmin(np.fmin(np.fmax(in_fever_low,in_fever_high),np.fmax(in_cough_low,in_cough_high)),np.fmax(in_rd_low,in_rd_high))
+    rule_7=np.fmin(np.fmax(in_fever_high,in_fever_low),np.fmax(in_cough_low,in_cough_high))
+
+    #rulewise output
+    rule_1_2=np.fmax(rule_1,rule_2)
+    rule_1_2_6=np.fmax(rule_1_2,rule_6)
+    rule_1_2_6_7=np.fmax(rule_1_2_6,rule_7)
+    active_output_testimm=np.fmin(rule_1_2_6_7,output_testimm)
+
+
+    rule_4_5=np.fmax(rule_4,rule_5)
+    active_output_isolation=np.fmin(rule_4_5,output_isolation)
+
+
+    active_output_noneed=np.fmin(rule_3,output_noneed)
+
+    ##working with output
+
+    op0 = np.zeros_like(x_output)
+
+    #aggregating output
+
+    agg_op=np.fmax(np.fmax(active_output_testimm,active_output_isolation),active_output_noneed)
+
+    #defuzzification--centroid
+    defuzz_centroid=fuzz.defuzz(x_output, agg_op, 'centroid')
+
+    #defuzzification--bisector
+    defuzz_bisector=fuzz.defuzz(x_output, agg_op, 'bisector')
+
+    #defuzzification--mom
+    defuzz_mom = fuzz.defuzz(x_output, agg_op, 'mom')
+
+    #defuzzification--som
+    defuzz_som = fuzz.defuzz(x_output, agg_op, 'som')
+
+    #defuzzification--lom
+    defuzz_lom = fuzz.defuzz(x_output, agg_op, 'lom')
+
+    print("here5")
+    output=round(defuzz_centroid)
+    if output<=3:
+        x="Your possibility to be covid positive is "
+        y=" in a scale of 10. You do not require a test now"
+        z=x+str(output)+y
+        print(x+str(output)+y)
+    if  3<output<=5:
+        x="Your possibility to be covid positive is "
+        y=" in a scale of 10. Please stay in isolation and remain vigilant"
+        z=x+str(output)+y
+        print(x+str(output)+y)
+    if  output>5:
+        x="Your possibility to be covid positive is "
+        y=" in a scale of 10. Please test immediately and consult specialist"
+        z=x+str(output)+y
+        print(x+str(output)+y)
+    
+    today = date.today()
+    result_to_insert = (today,l_email, str(output))    
+        
+    command_in_result = """ INSERT INTO USER_RESULT (test_Date,EMAIL_ADDRESS,result_txt) VALUES (%s,%s,%s);"""
+    #conn = None
+    try:
+        # read the connection parameters
+        #params = config()
+        # connect to the PostgreSQL server
+        print("here2")
+
+#------------------------db conncetion local--------------
+        conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+#----------------------db connection host------------------------------------
+#         conn = psycopg2.connect(
+#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
+#             database="d9m6c77v184dph",
+#             user="daolbbnurgtgwd",
+#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+        cur = conn.cursor()
+        print("here3")
+        # create table one by one
+        #for command in commands[:-1]:
+        print("here4")
+
+        cur.execute(command_in_result,result_to_insert)
+
+        print("here5")
+        # close communication with the PostgreSQL database server
+        cur.close()
+        # commit the changes
+        conn.commit()
+        #return render_template("index.html")
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            
+    userResult = getUserResult(l_email)
+    return render_template('index.html', prediction_text=z, userResult=userResult, arrRange=range(len(userResult)))
+
+
+
+def getUserResultCount(email):
+    userResultQuerycnt = '''
+SELECT count(*) cnt
+ FROM USER_RESULT A
+Where email_address = '{email}'
+    '''.format(email=email)
+    print(userResultQuerycnt)
+    try:
+        conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+#----------------------db connection host------------------------------------
+#         conn = psycopg2.connect(
+#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
+#             database="d9m6c77v184dph",
+#             user="daolbbnurgtgwd",
+#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+        cur = conn.cursor()
+        print("here in count login3")
+        # create table one by one
+        #for command in commands[:-1]:
+        #print("here l4")
+#-----------------------to get presently stored values-------------------------
+        df1=pd.read_sql(userResultQuerycnt,conn)
+        cnt=df1.loc[0, "cnt"]
+        print (cnt)
+        cur.close()
+        #return df1
+        return cnt
+    except:
+        print("tried")
+    finally:
+        if conn is not None:
+            conn.close()
+
+def getUserResult(email):
+    userResultQuery = '''
+SELECT TEST_DATE, RESULT_TXT FROM 
+(SELECT ROW_NUMBER( )OVER (PARTITION BY EMAIL_ADDRESS ORDER BY TEST_DATE DESC) AS RNM
+ , A.*
+ FROM USER_RESULT A
+) B
+Where email_address = '{email}' AND rnm<=3
+ order by rnm DESC
+    '''.format(email=email)
+    print(userResultQuery)
+    try:
+        conn =  psycopg2.connect("dbname=covidcal user=postgres password=AK1234")
+#----------------------db connection host------------------------------------
+#         conn = psycopg2.connect(
+#             host="ec2-44-199-22-207.compute-1.amazonaws.com",
+#             database="d9m6c77v184dph",
+#             user="daolbbnurgtgwd",
+#             password="de4a06735c26a7aca7ae26f165e93e3f635e6caaee0681bf4fdeafb68e94586d")
+        cur = conn.cursor()
+        print("here login3")
+        # create table one by one
+        #for command in commands[:-1]:
+        #print("here l4")
+#-----------------------to get presently stored values-------------------------
+        df=pd.read_sql(userResultQuery,conn)
+        #print (df)
+        cur.close()
+        return df
+    except:
+        print("tried")
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+        
+    
+    
+# #if __name__ == '__main__':
+#   #  create_tables()
+    
+    
+if __name__ == "__main__":
+    APP.run() 
+   
