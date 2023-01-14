@@ -22,6 +22,11 @@ def home():
     print("here start")
     return render_template('index1.html')
 
+@APP.route('/logout',methods=['GET','POST'])
+def loggingout():
+    #print("here start")
+    return render_template('index1.html')
+
 #-----------------------------------------------signup----------------
 @APP.route('/signup', methods=['POST'])
     
